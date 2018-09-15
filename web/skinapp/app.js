@@ -1,6 +1,7 @@
 var express = require("express"),
-bodyParser = require("body-parser"), 
-app = express(); 
+bodyParser  = require("body-parser"), 
+firebase    = require("firebase"),
+app         = express(); 
 
 app.set("view engine", "ejs"); 
 app.use(express.static("public"));
@@ -25,9 +26,26 @@ var bucket = admin.storage().bucket();
 
 app.get("/", function(req, res){
     
+    bucket.getFiles() 
+    .then(results => {
+     const files = results[0];
+     files[0].download({ destination: './photos/'+files[0].name }, function(err) {
+            if(err){
+                console.log(err)
+            }
+            else{
+                console.log("hello");
+                console.log(files[0].name)
+            }
+  
+        });
+            
+    })
+    .catch(err => {
+      console.error('ERROR:', err);
+    });
     
     
-    res.render("index.ejs"); 
 })
 
 app.get("/type/:type", function(req,res){
