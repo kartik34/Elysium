@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "941946207765",
+    "firebase_url": "https://htn2018-93d56.firebaseio.com",
+    "project_id": "htn2018-93d56",
+    "storage_bucket": "htn2018-93d56.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:941946207765:android:841b4fa855c50cbd",
+        "android_client_info": {
+          "package_name": "dreadloaf.com.htn2018"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "941946207765-1sm23rlh94btprb8o1v5121qemkn9tmu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dreadloaf.com.htn2018",
+            "certificate_hash": "2a05356b7c854d2a1ddf0bec1320d2155929b106"
+          }
+        },
+        {
+          "client_id": "941946207765-ukm37adu6k1mmjdq2eck0qk77vtkagh8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfdxc9UamTcZZexhEMMEUYTEm3tuWY4xs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "941946207765-ukm37adu6k1mmjdq2eck0qk77vtkagh8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
