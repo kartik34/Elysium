@@ -25,8 +25,8 @@ class InteractPresenter(private var mView: InteractView?, private val mInteracto
         mInteractor.uploadImageToStorage(imageUri, this)
     }
 
-    fun onDestroy(){
-        mView = null
+    fun analyze(photoUri : Uri, context: Context){
+        mInteractor.analyzeImage(photoUri, context)
     }
 
 }

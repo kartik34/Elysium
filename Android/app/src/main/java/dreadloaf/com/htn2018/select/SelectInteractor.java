@@ -18,9 +18,13 @@ import dreadloaf.com.htn2018.Mole;
 
 public class SelectInteractor {
 
+    interface OnCompleteLoadListener{
+        void onComplete(List<Mole> moles);
+    }
+
     FirebaseFirestore db;
 
-    List<Mole> loadSavedMoles() {
+    void loadSavedMoles(OnCompleteLoadListener listener) {
 
         final List<Mole> moles = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
@@ -41,7 +45,7 @@ public class SelectInteractor {
                         }
                     }
                 });
-        return moles;
+        listener.onComplete(moles);
     }
 
     void saveMoles(Mole[] moles){

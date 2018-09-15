@@ -12,14 +12,14 @@ import android.widget.AdapterView
 import dreadloaf.com.htn2018.Risk
 
 
-class MyAdapter(private val moles : Array<Mole>) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+class MyAdapter(private val moles : List<Mole>) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
     override fun getItemCount(): Int {
        return moles.size
     }
 
     override fun onBindViewHolder(p0: MyViewHolder, p1: Int) {
-        p0.bind(moles[p1].num.toString(), moles[p1].date, moles[p1].risk)
+        p0.bind(moles[p1].num.toString(), moles[p1].date, moles[p1].riskPercent)
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): MyViewHolder {
@@ -39,7 +39,7 @@ class MyAdapter(private val moles : Array<Mole>) : RecyclerView.Adapter<MyAdapte
             mRiskText = itemView.findViewById(R.id.risk_level)
         }
 
-        fun bind(num: String, date : String, risk : Risk){
+        fun bind(num: String, date : String, risk : Float){
             mNumberText.text = num
             mDateText.text = date
             mRiskText.text = risk.toString()
