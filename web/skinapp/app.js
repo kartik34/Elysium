@@ -52,19 +52,32 @@ app.get("/", function(req, res){
      const files = results[0];
      files[0].download({ destination: './photos/'+files[0].name }, function(err) {
          
-            files[0].delete(function(err){
-                if(err){
-                    console.log(err)
-                }
-            })
+       
             if(err){
                 console.log(err)
             }
             else{
                 console.log("hello");
                 console.log(files[0].name)
-                res.render("index", {name: "Kartik"})
+                Mole.create({
+                    path: files[0].name,
+                    malignancy: 0.99, 
+                    date: "Sep 15"
+                }, function(err, mole){
+                    if(err){
+                        console.log(err)
+                    }else{
+                      res.render("index", {mole: mole})
+
+                    }
+                })
+
             }
+            files[0].delete(function(err){
+                if(err){
+                    console.log(err)
+                }
+            })
   
         });
             
