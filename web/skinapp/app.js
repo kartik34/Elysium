@@ -1,12 +1,33 @@
-var express = require("express"),
-bodyParser  = require("body-parser"), 
-firebase    = require("firebase"),
-app         = express(); 
+var express     = require("express"),
+    bodyParser  = require("body-parser"), 
+    firebase    = require("firebase"),
+    mongoose    = require("mongoose"), 
+    app         = express(); 
+    
+//=================================================================
+//             CONNECTING LIBRARIES
 
+mongoose.connect("mongodb://localhost/restful_blog_app"); 
+app.use(bodyParser.urlencoded({extended: true})); 
 app.set("view engine", "ejs"); 
 app.use(express.static("public"));
 var fs = require('fs');
-//====================================================
+
+//=================================================================
+//                MONGODB CONFIG
+ 
+
+var moleSchema = new mongoose.Schema({
+    path: String, 
+    malignancy: Number,
+    date: String
+    
+})
+
+var Mole = mongoose.model("Mole", moleSchema); 
+
+
+//==================================================================
 //               FIREBASE CONFIG
 
 var admin = require("firebase-admin");
@@ -21,8 +42,8 @@ admin.initializeApp({
 
 var bucket = admin.storage().bucket();
 
-//====================================================
-
+//===================================================================
+//                ROUTES
 
 app.get("/", function(req, res){
     
@@ -30,12 +51,19 @@ app.get("/", function(req, res){
     .then(results => {
      const files = results[0];
      files[0].download({ destination: './photos/'+files[0].name }, function(err) {
+         
+            files[0].delete(function(err){
+                if(err){
+                    console.log(err)
+                }
+            })
             if(err){
                 console.log(err)
             }
             else{
                 console.log("hello");
                 console.log(files[0].name)
+                res.render("index", {name: "Kartik"})
             }
   
         });
