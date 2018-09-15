@@ -1,6 +1,7 @@
 package dreadloaf.com.htn2018.select
 
 import android.content.Context
+import dreadloaf.com.htn2018.FirebaseUtils
 import dreadloaf.com.htn2018.Mole
 
 class SelectPresenter(val mView : SelectView, val mInteractor: SelectInteractor) : SelectInteractor.OnCompleteLoadListener{
@@ -8,7 +9,7 @@ class SelectPresenter(val mView : SelectView, val mInteractor: SelectInteractor)
         mView.populateRecylcerView(moles)
     }
 
-    fun loadSavedMoles(context : Context){
-        mInteractor.loadSavedMoles(this)
+    fun loadSavedMoles(listener: FirebaseUtils.OnMoleLoadedListener) : List<Mole>{
+        return FirebaseUtils.loadSavedMoles(listener)
     }
 }

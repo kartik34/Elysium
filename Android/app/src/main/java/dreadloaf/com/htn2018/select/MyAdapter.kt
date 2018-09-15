@@ -8,11 +8,16 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import dreadloaf.com.htn2018.R
 import android.support.annotation.NonNull
+import android.util.Log
 import android.widget.AdapterView
 import dreadloaf.com.htn2018.Risk
 
 
 class MyAdapter(private val moles : List<Mole>) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
+
+    init {
+        Log.e("MyAdater", "size of list: " + moles.size)
+    }
 
     override fun getItemCount(): Int {
        return moles.size
@@ -39,7 +44,7 @@ class MyAdapter(private val moles : List<Mole>) : RecyclerView.Adapter<MyAdapter
             mRiskText = itemView.findViewById(R.id.risk_level)
         }
 
-        fun bind(num: String, date : String, risk : Float){
+        fun bind(num: String, date : String, risk : Double){
             mNumberText.text = num
             mDateText.text = date
             mRiskText.text = risk.toString()

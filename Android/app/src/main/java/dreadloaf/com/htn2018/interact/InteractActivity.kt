@@ -16,6 +16,9 @@ import android.R.attr.data
 import android.support.v4.app.NotificationCompat.getExtras
 import android.util.Log
 import android.widget.ImageView
+import android.widget.TextView
+import dreadloaf.com.htn2018.DateUtils
+import dreadloaf.com.htn2018.Mole
 
 
 class InteractActivity  : AppCompatActivity(), InteractView {
@@ -24,20 +27,31 @@ class InteractActivity  : AppCompatActivity(), InteractView {
     val REQUEST_IMAGE_CAPTURE = 1
     lateinit var photoURI : Uri
 
+    lateinit var mImagePath :String
+
     lateinit var mImageView : ImageView
+    lateinit var mDateText : TextView
 
     override  fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_interact)
 
         mImageView = findViewById(R.id.mole_image)
+        mDateText = findViewById(R.id.date_logged_interact_view)
+
+
 
         mPresenter = InteractPresenter(this, InteractInteractor())
+
+        mDateText.text = DateUtils.getTodayDateFormatted()
+
+
         findViewById<Button>(R.id.take_photo_button).setOnClickListener({
             val takePictureIntent : Intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if(takePictureIntent.resolveActivity(packageManager) != null) {
 
                 val photoFile = mPresenter.createFile(this)
+                mImagePath = photoFile.absolutePath
                 photoURI = FileProvider.getUriForFile(this,
                         "com.example.android.fileprovider",
                         photoFile)
@@ -70,5 +84,22 @@ class InteractActivity  : AppCompatActivity(), InteractView {
     }
     override fun onFailedUpload() {
         Toast.makeText(this, "Failed to upload file", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onSuccessfulAnalysis(probability: Double, type: String) {
+        var risk = ""
+        if(type == "Malignant"){
+            risk = "High"
+        }else{
+            risk = "Low"
+        }
+        val mole = Mole(-1, mDateText.text.toString(), probability, risk, listOf(probability), listOf(mDateText.text.toString()), mImagePath)
+        Log.e("InteractActivity", "saving moles")
+        mPresenter.saveMoles(mole)
+    }
+
+    override fun onSuccessfulSave() {
+        Toast.makeText(this, "Successfully Saved Moles", Toast.LENGTH_LONG).show()
+        finish()
     }
 }

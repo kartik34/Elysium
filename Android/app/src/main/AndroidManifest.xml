@@ -27,14 +27,14 @@
                 android:resource="@xml/file_paths"/>
         </provider>
 
-        <activity android:name=".interact.InteractActivity">
+        <activity android:name=".select.SelectActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".select.SelectActivity"/>
+        <activity android:name=".interact.InteractActivity"/>
     </application>
 
 </manifest>

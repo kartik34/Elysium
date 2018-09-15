@@ -9,7 +9,10 @@ import java.util.*
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import android.util.Log
+import com.google.firebase.firestore.FirebaseFirestore
 import dreadloaf.com.htn2018.Client
+import dreadloaf.com.htn2018.FirebaseUtils
+import dreadloaf.com.htn2018.Mole
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -21,11 +24,20 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.*
 
 
-class InteractInteractor {
+class InteractInteractor : FirebaseUtils.OnMoleLoadedListener{
+
+    lateinit var mole : Mole
+    lateinit var mListener: OnUploadCompleteListener
+
 
     interface OnUploadCompleteListener{
         fun onSuccess()
         fun onFailure()
+        fun onSuccessfulSave()
+    }
+
+    interface OnAnalysisCompleteListener{
+        fun onSuccessfulAnalysis(probability: Double, type: String)
     }
 
     private lateinit var mStorageRef : StorageReference
@@ -72,13 +84,10 @@ class InteractInteractor {
         })
     }
 
-    fun analyzeImage(photoUri: Uri, context: Context){
+    fun analyzeImage(photoUri: Uri, context: Context, listener: OnAnalysisCompleteListener){
         val builder : Retrofit.Builder = Retrofit.Builder()
                 .baseUrl("https://southcentralus.api.cognitive.microsoft.com/customvision/v2.0/Prediction/")
                 .addConverterFactory(ScalarsConverterFactory.create())
-
-
-
 
         val retrofit : Retrofit = builder.build()
         val client : Client = retrofit.create(Client::class.java)
@@ -100,16 +109,51 @@ class InteractInteractor {
 
                 val probability :Double = predictionValues["probability"] as Double
                 val type : String= predictionValues["tagName"] as String
-                
 
+               listener.onSuccessfulAnalysis(probability, type)
             }
         })
 
     }
 
+    fun initSaveMoles(newMole : Mole, listener: OnUploadCompleteListener){
+        mole = newMole
+        mListener = listener
+        FirebaseUtils.loadSavedMoles(this)
+    }
+
+    override fun onMoleLoaded(moles: MutableList<Mole>?) {
+       saveMoles(mole, moles, mListener)
+    }
+
+    fun saveMoles(newMole : Mole, moles: MutableList<Mole>?, listener: OnUploadCompleteListener) {
+        if(newMole !in moles!!){
+            moles.add(newMole)
+        }
+
+        Log.e("InteracInteractor", moles?.size.toString())
+        val db = FirebaseFirestore.getInstance()
+
+        for (mole in moles!!) {
+            val moleEntry = HashMap<String, Any>()
+
+            moleEntry["id"] = mole.num
+            moleEntry["date"] = mole.date
+            moleEntry["risk"] = mole.riskPercent
+            moleEntry["risk_value"] = mole.riskValue
+            moleEntry["risk_history"] = mole.riskHistory
+            moleEntry["date_history"] = mole.dateHistory
+            moleEntry["imageDir"] = mole.imageDir
 
 
-    fun uriToBytes(uri: Uri, context: Context) : ByteArray{
+            db.collection("moles")
+                    .add(moleEntry)
+                    .addOnSuccessListener ({ Log.e("InteractInteractor", "Saved entry") })
+        }
+        listener.onSuccessfulSave()
+    }
+
+    private fun uriToBytes(uri: Uri, context: Context) : ByteArray{
         try{
             val inputStream : InputStream = context.contentResolver.openInputStream(uri)
             val byteBuffer : ByteArrayOutputStream = ByteArrayOutputStream()

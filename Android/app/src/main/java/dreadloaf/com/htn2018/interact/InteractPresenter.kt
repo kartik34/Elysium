@@ -3,15 +3,28 @@ package dreadloaf.com.htn2018.interact
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import dreadloaf.com.htn2018.Mole
 import java.io.File
 
-class InteractPresenter(private var mView: InteractView?, private val mInteractor: InteractInteractor) : InteractInteractor.OnUploadCompleteListener {
+class InteractPresenter(private var mView: InteractView?, private val mInteractor: InteractInteractor) : InteractInteractor.OnUploadCompleteListener, InteractInteractor.OnAnalysisCompleteListener {
+    override fun onSuccessfulSave() {
+        mView?.onSuccessfulSave()
+    }
+
+    override fun onSuccessfulAnalysis(probability: Double, type: String) {
+        mView?.onSuccessfulAnalysis(probability, type)
+    }
+
     override fun onFailure() {
         mView?.onFailedUpload()
     }
 
     override fun onSuccess() {
         mView?.onSuccessfulUpload()
+    }
+
+    fun saveMoles(newMole : Mole){
+        mInteractor.initSaveMoles(newMole, this)
     }
 
     fun encodeImageAndUpload(bitMap: Bitmap){
@@ -26,7 +39,7 @@ class InteractPresenter(private var mView: InteractView?, private val mInteracto
     }
 
     fun analyze(photoUri : Uri, context: Context){
-        mInteractor.analyzeImage(photoUri, context)
+        mInteractor.analyzeImage(photoUri, context, this)
     }
 
 }
