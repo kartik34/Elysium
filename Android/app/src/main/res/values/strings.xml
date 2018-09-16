@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HTN2018</string>
+    <string name="doctors_note"><u>Doctor\'s Note</u></string>
 </resources>

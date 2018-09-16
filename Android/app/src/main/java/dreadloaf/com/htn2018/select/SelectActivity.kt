@@ -13,8 +13,7 @@ import dreadloaf.com.htn2018.Mole
 import dreadloaf.com.htn2018.R
 import dreadloaf.com.htn2018.interact.InteractActivity
 
-class SelectActivity : AppCompatActivity(), SelectView, FirebaseUtils.OnMoleLoadedListener {
-
+class SelectActivity : AppCompatActivity(), SelectView, FirebaseUtils.OnMoleLoadedListener, MyAdapter.CardViewOnClickListener{
 
 
     lateinit var mRecyclerView : RecyclerView
@@ -51,13 +50,23 @@ class SelectActivity : AppCompatActivity(), SelectView, FirebaseUtils.OnMoleLoad
     override fun populateRecylcerView(moles: List<Mole>) {
         Log.e("SelectActivity", "populating view with size " + moles.size)
 
-        mRecyclerView.adapter = MyAdapter(moles)
+        mRecyclerView.adapter = MyAdapter(moles, this)
     }
 
     override fun onMoleLoaded(moles: List<Mole>) {
         mMoles = moles
         Log.d("SelectActivity", moles.size.toString())
         populateRecylcerView(moles)
+    }
+
+    override fun onClick(id: Long, date: String, riskPercent: Double, riskValue: String, imageDir: String) {
+        val intent = Intent(this, InteractActivity::class.java)
+        intent.putExtra("id", id)
+        intent.putExtra("date", date)
+        intent.putExtra("riskPercent", riskPercent)
+        intent.putExtra("riskValue", riskValue)
+        intent.putExtra("imageDir", imageDir)
+        startActivity(intent)
     }
 
 }

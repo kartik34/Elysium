@@ -46,21 +46,26 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/risk_text_cardview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:text="Risk level: "/>
+                    <TextView
+                        android:id="@+id/risk_level"
+                        android:layout_alignParentEnd="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textSize="25sp"
+                        android:text="Low/Medium/High"/>
+                </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="25sp"
-                    android:text="Risk level: "/>
-                <TextView
-                    android:id="@+id/risk_level"
-                    android:layout_alignParentEnd="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:textSize="25sp"
-                    android:text="Low/Medium/High"/>
             </RelativeLayout>
 
             <View

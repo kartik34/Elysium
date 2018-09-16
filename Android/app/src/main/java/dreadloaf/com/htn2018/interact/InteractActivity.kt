@@ -24,10 +24,10 @@ import android.R.id.edit
 import android.content.Context
 import android.content.SharedPreferences
 import android.R.id.edit
-
-
-
-
+import android.graphics.BitmapFactory
+import android.opengl.Visibility
+import android.view.View
+import kotlin.math.roundToInt
 
 
 class InteractActivity  : AppCompatActivity(), InteractView {
@@ -36,8 +36,11 @@ class InteractActivity  : AppCompatActivity(), InteractView {
     val REQUEST_IMAGE_CAPTURE = 1
     lateinit var photoURI : Uri
 
+    lateinit var mTakePhotoButton :Button
     lateinit var mImagePath :String
-
+    lateinit var mRiskPercentText : TextView
+    lateinit var mRiskValueText : TextView
+    lateinit var mIdText : TextView
     lateinit var mImageView : ImageView
     lateinit var mDateText : TextView
 
@@ -47,7 +50,42 @@ class InteractActivity  : AppCompatActivity(), InteractView {
 
         mImageView = findViewById(R.id.mole_image)
         mDateText = findViewById(R.id.date_logged_interact_view)
+        mIdText = findViewById(R.id.mole_id_interact_view)
+        mRiskPercentText = findViewById(R.id.malignant_percent)
+        mRiskValueText = findViewById(R.id.risk_text)
+        mTakePhotoButton = findViewById(R.id.take_photo_button)
 
+        Log.e("We hawt", "yes")
+        val prevIntent = intent
+        //Then it came from the onClick
+        if(prevIntent.hasExtra("id")){
+            val id = prevIntent.extras.get("id")
+            val date = prevIntent.extras.get("date")
+            val riskPercent : Double = prevIntent.extras.get("riskPercent") as Double
+            val riskValue : String = prevIntent.extras.get("riskValue").toString()
+            val imageDir = prevIntent.extras.get("imageDir")
+            Log.e("InteractActivity", "Happening")
+            mIdText.text = id.toString()
+            //TODO: If want to display id remove thsis line
+            mIdText.visibility = View.GONE
+            mDateText.text = date.toString()
+            var formattedRisk : Int
+            if(riskPercent < 1){
+                 formattedRisk = (riskPercent * 100).roundToInt()
+                if(riskValue == "Low"){
+                    formattedRisk = 100 - formattedRisk
+                }
+            }else{
+                formattedRisk = riskPercent.toInt()
+            }
+
+
+            mRiskPercentText.text = formattedRisk.toString() + "%"
+            mRiskValueText.text = riskValue + " Risk: "
+            val bitmap = BitmapFactory.decodeFile(imageDir.toString())
+            mImageView.setImageBitmap(bitmap)
+            mTakePhotoButton.visibility = View.GONE
+        }
 
 
         mPresenter = InteractPresenter(this, InteractInteractor())
@@ -55,7 +93,7 @@ class InteractActivity  : AppCompatActivity(), InteractView {
         mDateText.text = DateUtils.getTodayDateFormatted()
 
 
-        findViewById<Button>(R.id.take_photo_button).setOnClickListener({
+        mTakePhotoButton.setOnClickListener({
             val takePictureIntent : Intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             if(takePictureIntent.resolveActivity(packageManager) != null) {
 
@@ -69,7 +107,11 @@ class InteractActivity  : AppCompatActivity(), InteractView {
                 Log.e("InteractActivity", "started activity")
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
             }
+
+
         })
+
+
 
     }
 
@@ -109,14 +151,14 @@ class InteractActivity  : AppCompatActivity(), InteractView {
 
     override fun onSuccessfulSave() {
         Toast.makeText(this, "Successfully Saved Moles", Toast.LENGTH_LONG).show()
-        finish()
+
     }
 
     fun getNextId(): Int{
         val sharedPref = getSharedPreferences("appData", Context.MODE_PRIVATE)
         val prefEditor = getSharedPreferences("appData", Context.MODE_PRIVATE).edit()
 
-        val id = sharedPref.getInt("id", 0)
+        val id = sharedPref.getInt("id", 1)
 
         prefEditor.putInt("id", id+1)
         prefEditor.apply()
