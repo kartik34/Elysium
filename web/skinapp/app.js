@@ -1,17 +1,18 @@
 var express     = require("express"),
     bodyParser  = require("body-parser"), 
     firebase    = require("firebase"),
+    methodOverride = require("method-override"), 
     mongoose    = require("mongoose"), 
     app         = express(); 
     
 //=================================================================
 //             CONNECTING LIBRARIES
 
-mongoose.connect("mongodb://localhost/restful_blog_app"); 
+mongoose.connect("mongodb://localhost/test2"); 
 app.use(bodyParser.urlencoded({extended: true})); 
 app.set("view engine", "ejs"); 
 var serveStatic = require('serve-static')
-
+app.use(methodOverride("_method"));
 app.use(serveStatic('skinapp/'))
 app.use(express.static("public"));
 var fs = require('fs');
@@ -66,7 +67,7 @@ app.get("/", function(req, res){
     bucket.getFiles() 
     .then(results => {
      const files = results[0];
-     if(files != null || files != ""){
+     if(files != null && files != ""){
          files[0].download({ destination: './public/photos/'+files[0].name }, function(err) {
          
        
@@ -83,34 +84,39 @@ app.get("/", function(req, res){
                     .then(querySnapshot => {
                         const doc = querySnapshot.docs[0];
                         if (doc) {
-                            console.log('Document data:', doc.data());
+                            Mole.create({
+                                path: files[0].name,
+                                malignancy: doc.data().risk,
+                                date: doc.data().date,
+                                basicId: doc.data().id,
+                                malignancyRisk: doc.data().risk_value
+                            }, function(err, mole){
+                                if(err){
+                                    console.log(err)
+                                }else{
+                                   
+                                   Mole.find({}, function(err, moles){
+                                       if(err){
+                                           console.log(err)
+                                       }else{
+                                           console.log(moles); 
+                                           res.render("index", {moles: moles})
+                                       }
+                                   })
+                                  
+            
+                                }
+                            })
+                            console.log('Document data:', doc.data().risk);
                         } else {
                             console.log('No such document');
                         }
                     })
-                    /*.then(doc => {
-                      if (!doc.exists) {
-                        console.log('No such document!');
-                      } else {
-                        console.log('Document data:', doc.data());
-                      }
-                    })*/
                     .catch(err => {
                       console.log('Error getting document', err);
                     });
                 
-                Mole.create({
-                    path: files[0].name,
-                    malignancy: 0.1,
-                    date: "Sep 15"
-                }, function(err, mole){
-                    if(err){
-                        console.log(err)
-                    }else{
-                      res.render("index", {mole: mole})
-
-                    }
-                })
+                
 
             }
             files[0].delete(function(err){
@@ -123,7 +129,14 @@ app.get("/", function(req, res){
             
          
      }else{
-         res.render("landing")
+         Mole.find({}, function(err, moles){
+           if(err){
+               console.log(err)
+           }else{
+               console.log(moles); 
+               res.render("index", {moles: moles})
+           }
+       })
      }
      
     })
@@ -139,10 +152,35 @@ app.get("/showpage/:id", function(req,res){
         if(err){
             res.redirect("index")
         }else{
+            console.log(foundMole)
             res.render("show", {mole: foundMole})
         }
     })
-    res.render("show")
+})
+app.put("/showpage/:id", function(req,res){
+    
+    
+    
+    
+    Mole.findByIdAndUpdate(req.params.id, req.body.message, function(err, updatedMole){
+        if(err){
+            res.redirect("index")
+        }else{
+            console.log(updatedMole)
+            var id = updatedMole.basicId.toString()
+            var string = "message"
+        
+            
+          admin.database().ref("/").update({[updatedMole.basicId] : req.body.message});
+
+
+          
+          res.redirect(updatedMole._id)
+
+         
+            
+        }
+    })
 })
 
 app.post("/showpage", function(req,res){

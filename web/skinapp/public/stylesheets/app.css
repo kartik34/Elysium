@@ -5,9 +5,29 @@ i.icon{
     margin-left: 0.1em;
 }
 .container.main {
-    margin-top: 7.0em !important; 
+    margin-top: 6.0em !important; 
     
 }
 #input {
     margin-top: 1.7em !important;
+}
+.resize {
+    width:300px; 
+    height: auto;
+}
+#form{
+    margin-top: 0em !important; 
+    margin-bottom: 4em !important;
+}
+#molenum{
+    margin-left: 0.3em;
+}
+.items{
+    margin-left: 0.6em !important;
+}
+#h3{
+    margin-top: 0.8em !important;
+}
+.date{
+    margin-bottom: 0.6em !important;
 }

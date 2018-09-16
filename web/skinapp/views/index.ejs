@@ -1,12 +1,25 @@
 <% include ./partials/header %>
+<% moles.forEach(function(mole){ %>
+    <div>
+        <h2>Lesion #<%=mole.basicId%></h2>
+        <img src="photos/<%=mole["path"]%>">	
+        <span><%= mole.date %></span>
+        <p><%= mole.malignancyRisk %></p>
+        <p>
+            <% if(mole.malignancyRisk == "High"){ %>
+                <%= mole.malignancy %>
+            <% } else{%>
+            <%= 1 - mole.malignancy %>
+            <% } %>
+        
+        </p>
+        <a href="/showpage/<%= mole._id %>">View</a>
+        
+        
+    </div>
+    
+<% }) %>
 
 
-<h1>This is the home page of: <%= mole["path"] %> </h1>
-<img src="photos/<%=mole["path"]%>">	
-<% for(var x=0; x<10; x++){ %>
-    
-    <p>Hello</p>
-    
-<% } %>
 
 <% include ./partials/footer %>

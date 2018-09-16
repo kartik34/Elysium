@@ -1,19 +1,47 @@
 <% include ./partials/header %>
 
 <div class = "ui main text container segment">
-    <div class="ui huge header">Mole #<%= mole.basicId %></div>
+    <div id = "molenum" class="ui huge header">Lesion #<%= mole.basicId %></div>
+    <div class = "ui top attached">
+        <div class="item">
+            <span class= "items date"><%= mole.date %></span>
+
+           <img class="ui centered rounded image" src="/photos/<%=mole["path"]%>">	
+           <div class="content">
+              
+
+
+           </div>
+           <div class="description">
+               <h3 id="h3" class="items">Classified as: <%= mole.malignancyRisk %> Risk</h3>
+                   <p class = "items">
+                    <% if(mole.malignancyRisk == "High"){ %>
+                        <b>Predicted to be: </b><%= (Math.round(mole.malignancy * 100) / 100).toFixed()*100 %>% Malignant 
+                    <% } else{%>
+                        <b>Predicted to be: </b><%= 100 - (Math.round(mole.malignancy * 100) / 100).toFixed()*100 %>% Malignant
+                    <% } %>
+                
+                </p>
+               
+           </div>
+           
+
+        </div>
+        
+    </div>
+        
 </div>
 
 
 
-<div class="ui main text container segment">
+<div id="form" class="ui main text container segment">
     <div id="header" class = "ui huge header">Send Feedback</div>
-    <form class = "ui form" action="/showpage" method = "POST">
+    <form class = "ui form" action="/showpage/<%=mole._id%>?_method=PUT" method = "POST">
         <div>
-            <textarea name = "message[body]" placeholder="Message for Patient"></textarea>
+            <textarea name = "message[message]" placeholder="Message for Patient"></textarea>
         </div>
         <input id = "input" class="ui red button" type = "submit">
 
     </form>
-</div>
+</div> 
 <% include ./partials/footer %>
