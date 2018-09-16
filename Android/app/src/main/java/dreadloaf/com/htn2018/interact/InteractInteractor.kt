@@ -28,7 +28,7 @@ class InteractInteractor : FirebaseUtils.OnMoleLoadedListener{
 
     lateinit var mole : Mole
     lateinit var mListener: OnUploadCompleteListener
-
+    lateinit var mSavedMoles : MutableList<String>
 
     interface OnUploadCompleteListener{
         fun onSuccess()
@@ -60,22 +60,11 @@ class InteractInteractor : FirebaseUtils.OnMoleLoadedListener{
         return image
     }
 
-
-
-    fun encodeImageAndUpload(bitmap: Bitmap){
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-        val encodedImage = Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray())
-
-
-    }
-
     fun uploadImageToStorage(imageUri: Uri, listener: OnUploadCompleteListener){
         mStorageRef = FirebaseStorage.getInstance().reference
         val filePath = mStorageRef.child(imageUri.lastPathSegment)
 
         filePath.putFile(imageUri).addOnSuccessListener({ taskSnapshot ->
-            val downloadUrl = taskSnapshot.downloadUrl
             listener.onSuccess()
 
         })
@@ -119,6 +108,7 @@ class InteractInteractor : FirebaseUtils.OnMoleLoadedListener{
     fun initSaveMoles(newMole : Mole, listener: OnUploadCompleteListener){
         mole = newMole
         mListener = listener
+        mSavedMoles = mutableListOf()
         FirebaseUtils.loadSavedMoles(this)
     }
 
@@ -135,20 +125,22 @@ class InteractInteractor : FirebaseUtils.OnMoleLoadedListener{
         val db = FirebaseFirestore.getInstance()
 
         for (mole in moles!!) {
-            val moleEntry = HashMap<String, Any>()
+            if(mole.date !in mSavedMoles){
+                val moleEntry = HashMap<String, Any>()
 
-            moleEntry["id"] = mole.num
-            moleEntry["date"] = mole.date
-            moleEntry["risk"] = mole.riskPercent
-            moleEntry["risk_value"] = mole.riskValue
-            moleEntry["risk_history"] = mole.riskHistory
-            moleEntry["date_history"] = mole.dateHistory
-            moleEntry["imageDir"] = mole.imageDir
+                moleEntry["id"] = mole.num
+                moleEntry["date"] = mole.date
+                moleEntry["risk"] = mole.riskPercent
+                moleEntry["risk_value"] = mole.riskValue
+                moleEntry["imageDir"] = mole.imageDir
 
+                mSavedMoles.add(mole.date)
 
-            db.collection("moles")
-                    .add(moleEntry)
-                    .addOnSuccessListener ({ Log.e("InteractInteractor", "Saved entry") })
+                db.collection("moles")
+                        .add(moleEntry)
+                        .addOnSuccessListener ({ Log.e("InteractInteractor", "Saved entry") })
+            }
+
         }
         listener.onSuccessfulSave()
     }

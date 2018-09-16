@@ -14,7 +14,18 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="100dp"
+                    android:id="@+id/mole_preview_image"
+                    app:civ_border_color="#FF000000"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_height="100dp"
+                    android:padding="5dp"
+                    app:civ_border_width="2dp"/>
+
                 <TextView
+                    android:layout_below="@+id/mole_preview_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/mole_number"
@@ -52,6 +63,10 @@
                     android:text="Low/Medium/High"/>
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"/>
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

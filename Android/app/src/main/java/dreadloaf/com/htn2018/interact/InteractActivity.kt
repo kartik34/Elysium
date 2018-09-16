@@ -19,6 +19,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import dreadloaf.com.htn2018.DateUtils
 import dreadloaf.com.htn2018.Mole
+import android.content.Context.MODE_PRIVATE
+import android.R.id.edit
+import android.content.Context
+import android.content.SharedPreferences
+import android.R.id.edit
+
+
+
+
 
 
 class InteractActivity  : AppCompatActivity(), InteractView {
@@ -93,7 +102,7 @@ class InteractActivity  : AppCompatActivity(), InteractView {
         }else{
             risk = "Low"
         }
-        val mole = Mole(-1, mDateText.text.toString(), probability, risk, listOf(probability), listOf(mDateText.text.toString()), mImagePath)
+        val mole = Mole(getNextId().toLong(), mDateText.text.toString(), probability, risk, mImagePath)
         Log.e("InteractActivity", "saving moles")
         mPresenter.saveMoles(mole)
     }
@@ -101,5 +110,17 @@ class InteractActivity  : AppCompatActivity(), InteractView {
     override fun onSuccessfulSave() {
         Toast.makeText(this, "Successfully Saved Moles", Toast.LENGTH_LONG).show()
         finish()
+    }
+
+    fun getNextId(): Int{
+        val sharedPref = getSharedPreferences("appData", Context.MODE_PRIVATE)
+        val prefEditor = getSharedPreferences("appData", Context.MODE_PRIVATE).edit()
+
+        val id = sharedPref.getInt("id", 0)
+
+        prefEditor.putInt("id", id+1)
+        prefEditor.apply()
+        return id
+
     }
 }

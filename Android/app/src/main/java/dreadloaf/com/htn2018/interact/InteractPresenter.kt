@@ -28,7 +28,7 @@ class InteractPresenter(private var mView: InteractView?, private val mInteracto
     }
 
     fun encodeImageAndUpload(bitMap: Bitmap){
-        mInteractor.encodeImageAndUpload(bitMap)
+        //mInteractor.encodeImageAndUpload(bitMap)
     }
 
     fun createFile(context: Context) =  mInteractor.createImageFile(context)
