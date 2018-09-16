@@ -133,6 +133,7 @@ class InteractInteractor : FirebaseUtils.OnMoleLoadedListener{
                 moleEntry["risk"] = mole.riskPercent
                 moleEntry["risk_value"] = mole.riskValue
                 moleEntry["imageDir"] = mole.imageDir
+                moleEntry["tracking"] = mole.tracking
 
                 mSavedMoles.add(mole.date)
 

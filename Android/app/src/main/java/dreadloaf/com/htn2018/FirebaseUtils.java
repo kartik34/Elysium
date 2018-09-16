@@ -35,7 +35,7 @@ public class FirebaseUtils {
                             for (DocumentSnapshot document : task.getResult()) {
                                 Map<String, Object> data = document.getData();
 
-                                Mole mole = new Mole((Long)data.get("id"), (String) data.get("date"), (Double) data.get("risk"), (String)data.get("risk_value"), (String)data.get("imageDir"));
+                                Mole mole = new Mole((Long)data.get("id"), (String) data.get("date"), (Double) data.get("risk"), (String)data.get("risk_value"), (String)data.get("imageDir"), (Boolean)data.get("tracking"));
                                 if(!listContainsMole(moles, mole)){
                                     Log.e("FirebaseUtils", "adding mole");
                                     moles.add(mole);

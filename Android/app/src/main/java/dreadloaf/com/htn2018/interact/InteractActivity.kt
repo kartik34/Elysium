@@ -24,6 +24,11 @@ import android.graphics.BitmapFactory
 import android.opengl.Visibility
 import android.view.View
 import android.widget.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlin.math.roundToInt
 
 
@@ -33,6 +38,10 @@ class InteractActivity  : AppCompatActivity(), InteractView {
     val REQUEST_IMAGE_CAPTURE = 1
     lateinit var photoURI : Uri
 
+
+    var mTracking : Boolean = false
+    var mId : Long = -1
+    lateinit var mTrackingButton : Button
     lateinit var mProgressBar : ProgressBar
     lateinit var mTakePhotoButton :Button
     lateinit var mImagePath :String
@@ -46,6 +55,7 @@ class InteractActivity  : AppCompatActivity(), InteractView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_interact)
 
+        mTrackingButton = findViewById(R.id.tracking_button)
         mProgressBar = findViewById(R.id.analysis_loading)
         mImageView = findViewById(R.id.mole_image)
         mDateText = findViewById(R.id.date_logged_interact_view)
@@ -54,15 +64,25 @@ class InteractActivity  : AppCompatActivity(), InteractView {
         mRiskValueText = findViewById(R.id.risk_text)
         mTakePhotoButton = findViewById(R.id.take_photo_button)
 
-        Log.e("We hawt", "yes")
+
+
         val prevIntent = intent
         //Then it came from the onClick
         if(prevIntent.hasExtra("id")){
-            val id = prevIntent.extras.get("id")
+            val id = prevIntent.extras.get("id") as Long
             val date = prevIntent.extras.get("date")
             val riskPercent : Double = prevIntent.extras.get("riskPercent") as Double
             val riskValue : String = prevIntent.extras.get("riskValue").toString()
             val imageDir = prevIntent.extras.get("imageDir")
+            val tracking = prevIntent.extras.get("tracking") as Boolean
+            mTracking = tracking
+            mId = id
+            if(tracking){
+                mTrackingButton.text = "Stop Tracking"
+            }else{
+                mTrackingButton.text = "Begin Tracking"
+            }
+
             Log.e("InteractActivity", "Happening")
             mIdText.text = id.toString()
             //TODO: If want to display id remove thsis line
@@ -77,8 +97,10 @@ class InteractActivity  : AppCompatActivity(), InteractView {
             }else{
                 formattedRisk = riskPercent.toInt()
             }
-
-
+            //Edge case
+            if(riskValue == "Low" && formattedRisk == 100){
+                formattedRisk = 0
+            }
             mRiskPercentText.text = formattedRisk.toString() + "%"
             mRiskValueText.text = riskValue + " Risk: "
             val bitmap = BitmapFactory.decodeFile(imageDir.toString())
@@ -94,6 +116,17 @@ class InteractActivity  : AppCompatActivity(), InteractView {
 
         mDateText.text = DateUtils.getTodayDateFormatted()
 
+
+        mTrackingButton.setOnClickListener({
+            mTracking = !mTracking
+
+            if(mTracking){
+                mTrackingButton.text = "Stop Tracking"
+            }else{
+                mTrackingButton.text = "Begin Tracking"
+            }
+
+        })
 
         mTakePhotoButton.setOnClickListener({
             val takePictureIntent : Intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -155,7 +188,10 @@ class InteractActivity  : AppCompatActivity(), InteractView {
         mRiskPercentText.visibility = View.VISIBLE
         mTakePhotoButton.visibility = View.GONE
         mProgressBar.visibility = View.GONE
-        val mole = Mole(getNextId().toLong(), mDateText.text.toString(), probability, risk, mImagePath)
+        mId = getNextId().toLong()
+
+
+        val mole = Mole(mId, mDateText.text.toString(), probability, risk, mImagePath, mTracking )
         Log.e("InteractActivity", "saving moles")
         mPresenter.saveMoles(mole)
 
@@ -163,6 +199,17 @@ class InteractActivity  : AppCompatActivity(), InteractView {
 
     override fun onSuccessfulSave() {
         Toast.makeText(this, "Successfully Saved Moles", Toast.LENGTH_LONG).show()
+        val database = FirebaseDatabase.getInstance().reference
+        database.child(mId.toString()).addValueEventListener(object: ValueEventListener(){
+            override fun onCancelled(p0: DatabaseError?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onDataChange(p0: DataSnapshot?) {
+                val data = p0?.getValue(String.javaClass)
+
+            }
+        })
 
     }
 

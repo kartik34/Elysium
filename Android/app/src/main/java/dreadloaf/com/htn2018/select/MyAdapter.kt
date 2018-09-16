@@ -24,7 +24,7 @@ import kotlin.math.roundToInt
 class MyAdapter(private val moles : List<Mole>, val listener : CardViewOnClickListener) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
     interface CardViewOnClickListener{
-        fun onClick(id: Long, date: String, riskPercent : Double, riskValue:String, imageDir: String)
+        fun onClick(id: Long, date: String, riskPercent : Double, riskValue:String, imageDir: String, tracking : Boolean)
     }
 
     init {
@@ -36,7 +36,7 @@ class MyAdapter(private val moles : List<Mole>, val listener : CardViewOnClickLi
     }
 
     override fun onBindViewHolder(p0: MyViewHolder, p1: Int) {
-        p0.bind(moles[p1].num.toString(), moles[p1].date, moles[p1].riskPercent, moles[p1].imageDir, moles[p1].riskValue ,listener)
+        p0.bind(moles[p1].num.toString(), moles[p1].date, moles[p1].riskPercent, moles[p1].imageDir, moles[p1].riskValue, moles[p1].tracking, listener)
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): MyViewHolder {
@@ -54,6 +54,7 @@ class MyAdapter(private val moles : List<Mole>, val listener : CardViewOnClickLi
         lateinit var mImageDir : String
         lateinit var mRiskValueText : TextView
         lateinit var  mRiskValue :String
+        var mTracking : Boolean = false
         lateinit var mListener: CardViewOnClickListener
 
         init {
@@ -63,15 +64,14 @@ class MyAdapter(private val moles : List<Mole>, val listener : CardViewOnClickLi
             mDateText = itemView.findViewById(R.id.date_logged)
             mRiskText = itemView.findViewById(R.id.risk_level)
             mPreviewImage = itemView.findViewById(R.id.mole_preview_image)
-
             mNumberText.visibility = View.GONE
             itemView.setOnClickListener(this)
         }
 
-        fun bind(num: String, date : String, risk : Double, imageDir : String, riskValue:String, listener: CardViewOnClickListener){
+        fun bind(num: String, date : String, risk : Double, imageDir : String, riskValue:String, tracking: Boolean, listener: CardViewOnClickListener){
             mNumberText.text = num
             mDateText.text = date
-
+            mTracking = tracking
             var formattedRisk = (risk * 100).roundToInt()
             if(riskValue == "Low"){
                 formattedRisk = 100 - formattedRisk
@@ -91,7 +91,8 @@ class MyAdapter(private val moles : List<Mole>, val listener : CardViewOnClickLi
                     mDateText.text.toString(),
                     mRiskText.text.toString().substring(0, mRiskText.text.toString().length-1).toDouble(),
                     mRiskValue,
-                    mImageDir)
+                    mImageDir,
+                    mTracking)
         }
 
 

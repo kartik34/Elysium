@@ -42,10 +42,7 @@ class SelectActivity : AppCompatActivity(), SelectView, FirebaseUtils.OnMoleLoad
 
 
 
-        findViewById<FloatingActionButton>(R.id.add_mole_button).setOnClickListener({
-            val intent = Intent(this, InteractActivity::class.java)
-            startActivity(intent)
-        })
+
 
     }
 
@@ -85,13 +82,14 @@ class SelectActivity : AppCompatActivity(), SelectView, FirebaseUtils.OnMoleLoad
         populateRecylcerView(moles)
     }
 
-    override fun onClick(id: Long, date: String, riskPercent: Double, riskValue: String, imageDir: String) {
+    override fun onClick(id: Long, date: String, riskPercent: Double, riskValue: String, imageDir: String, tracking: Boolean) {
         val intent = Intent(this, InteractActivity::class.java)
         intent.putExtra("id", id)
         intent.putExtra("date", date)
         intent.putExtra("riskPercent", riskPercent)
         intent.putExtra("riskValue", riskValue)
         intent.putExtra("imageDir", imageDir)
+        intent.putExtra("tracking", tracking)
         startActivity(intent)
     }
 
