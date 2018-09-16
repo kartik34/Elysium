@@ -23,8 +23,9 @@ var fs = require('fs');
 var moleSchema = new mongoose.Schema({
     path: String, 
     malignancy: Number,
+    malignancyRisk: String,
     date: String,
-    id: Number,
+    basicId: Number,
     message: String
     
 })
@@ -35,6 +36,8 @@ var Mole = mongoose.model("Mole", moleSchema);
 //==================================================================
 //               FIREBASE CONFIG
 
+
+
 var admin = require("firebase-admin");
 
 
@@ -42,8 +45,11 @@ var serviceAccount = require("./key.json");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
+    authDomain: "htn2018-93d56.firebaseapp.com",
+    databaseURL: "https://htn2018-93d56.firebaseio.com",
+    projectId: "htn2018-93d56",
     storageBucket: "htn2018-93d56.appspot.com",
-    databaseURL: "https://htn2018-93d56.firebaseio.com/"
+    messagingSenderId: "941946207765"
 });
 var bucket = admin.storage().bucket();
 
@@ -70,14 +76,28 @@ app.get("/", function(req, res){
             else{
                 console.log("hello");
                 console.log(files[0].name)
-                // var length = db.collection("moles")
-                // db.collection("batches")
-                //   .orderBy('added_at', 'desc') // Order documents by added_at field in descending order
-                //   .where('added_at', "<", paymentData.added_at)
-                //   .limit(1).get().then(function(prevSnapshot){
-                //           // ...
-                //   })
-                // var mole = db.collection("moles")[length]
+                var moleRef = db.collection('moles')
+                var latestMole = moleRef.orderBy('id', 'desc').limit(1);
+                
+                latestMole.get()
+                    .then(querySnapshot => {
+                        const doc = querySnapshot.docs[0];
+                        if (doc) {
+                            console.log('Document data:', doc.data());
+                        } else {
+                            console.log('No such document');
+                        }
+                    })
+                    /*.then(doc => {
+                      if (!doc.exists) {
+                        console.log('No such document!');
+                      } else {
+                        console.log('Document data:', doc.data());
+                      }
+                    })*/
+                    .catch(err => {
+                      console.log('Error getting document', err);
+                    });
                 
                 Mole.create({
                     path: files[0].name,
@@ -114,12 +134,21 @@ app.get("/", function(req, res){
     
 })
 
-app.get("/type/:type", function(req,res){
-    var type = req.params.type
-    res.render("index.ejs", {name: type})
+app.get("/showpage/:id", function(req,res){
+    Mole.findById(req.params.id, function(err, foundMole){
+        if(err){
+            res.redirect("index")
+        }else{
+            res.render("show", {mole: foundMole})
+        }
+    })
+    res.render("show")
 })
 
-
+app.post("/showpage", function(req,res){
+    //edit mole db to include new message 
+    
+})
 
 
 
