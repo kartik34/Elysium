@@ -1,3 +1,4 @@
+<% include ./partials/header %>
 <h1>This is the home page of: <%= mole["path"] %> </h1>
 <img src="photos/<%=mole["path"]%>">	
 <% for(var x=0; x<10; x++){ %>
@@ -5,3 +6,5 @@
     <p>Hello</p>
     
 <% } %>
+
+<% include ./partials/footer %>

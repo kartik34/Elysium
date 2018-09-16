@@ -23,7 +23,9 @@ var fs = require('fs');
 var moleSchema = new mongoose.Schema({
     path: String, 
     malignancy: Number,
-    date: String
+    date: String,
+    id: Number,
+    message: String
     
 })
 
@@ -69,15 +71,12 @@ app.get("/", function(req, res){
                 console.log("hello");
                 console.log(files[0].name)
                 // var length = db.collection("moles")
-                db.collection('moles').get()
-                .then((snapshot) => {
-                  snapshot.forEach((doc) => {
-                    console.log(doc.id, '=>', doc.data());
-                  });
-                })
-                .catch((err) => {
-                  console.log('Error getting documents', err);
-                });
+                // db.collection("batches")
+                //   .orderBy('added_at', 'desc') // Order documents by added_at field in descending order
+                //   .where('added_at', "<", paymentData.added_at)
+                //   .limit(1).get().then(function(prevSnapshot){
+                //           // ...
+                //   })
                 // var mole = db.collection("moles")[length]
                 
                 Mole.create({
