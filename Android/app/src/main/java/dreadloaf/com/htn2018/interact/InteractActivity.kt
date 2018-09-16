@@ -92,8 +92,11 @@ class InteractActivity  : AppCompatActivity(), InteractView {
 
                 override fun onDataChange(p0: DataSnapshot?) {
                     val data = p0?.value.toString()
-                    val str = data.substring(data.indexOf("=")+1, data.indexOf("}"))
-                    mNote.text = str
+                    if(data.indexOf("=") != -1 && data.indexOf("}") != -1){
+                        val str = data.substring(data.indexOf("=")+1, data.indexOf("}"))
+                        mNote.text = str
+                    }
+
                 }
             })
 
@@ -216,13 +219,16 @@ class InteractActivity  : AppCompatActivity(), InteractView {
         val database = FirebaseDatabase.getInstance().reference
         database.child(mId.toString()).addValueEventListener(object: ValueEventListener{
             override fun onCancelled(p0: DatabaseError?) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                Log.e("idk", p0.toString())
             }
 
             override fun onDataChange(p0: DataSnapshot?) {
                 val data = p0?.value.toString()
-                val str = data.substring(data.indexOf("=")+1, data.indexOf("}"))
-                mNote.text = str
+                if(data.indexOf("=") != -1 && data.indexOf("}") != -1){
+                    val str = data.substring(data.indexOf("=")+1, data.indexOf("}"))
+                    mNote.text = str
+                }
+
             }
         })
 

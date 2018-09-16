@@ -17,6 +17,7 @@ import dreadloaf.com.htn2018.interact.InteractActivity
 import kotlinx.android.synthetic.main.activity_select.*
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.ProgressBar
 
 
 class SelectActivity : AppCompatActivity(), SelectView, FirebaseUtils.OnMoleLoadedListener, MyAdapter.CardViewOnClickListener{
@@ -34,15 +35,9 @@ class SelectActivity : AppCompatActivity(), SelectView, FirebaseUtils.OnMoleLoad
         if(getSupportActionBar() !=null) getSupportActionBar()?.setDisplayShowTitleEnabled(false);
         mPresenter = SelectPresenter(this, SelectInteractor())
 
-        //mToolBar = findViewById(R.id.toolbar)
-        //setSupportActionBar(mToolBar)
         mRecyclerView = findViewById(R.id.mole_list)
         val linearLayoutManager = LinearLayoutManager(this)
         mRecyclerView.layoutManager = linearLayoutManager
-
-
-
-
 
     }
 
