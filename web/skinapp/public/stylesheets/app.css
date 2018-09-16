@@ -5,7 +5,7 @@ i.icon{
     margin-left: 0.1em;
 }
 .container.main {
-    margin-top: 6.0em !important; 
+    margin-top: 5.0em !important; 
     
 }
 #input {
@@ -30,4 +30,22 @@ i.icon{
 }
 .date{
     margin-bottom: 0.6em !important;
+}
+
+#indeximage{
+    margin-top: 1em; 
+    margin-left: 0.25em;
+    
+}
+#description{
+    margin-left: -0.5em;
+    margin-top: -0.5em;
+    margin-bottom: 1.65em;
+}
+#button{
+    margin-bottom: 1.6em;
+    margin-top: 0.2em;
+}
+#headliner{
+    margin-bottom: 1em;
 }
