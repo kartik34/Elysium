@@ -50,6 +50,7 @@ class InteractActivity  : AppCompatActivity(), InteractView {
     lateinit var mIdText : TextView
     lateinit var mImageView : ImageView
     lateinit var mDateText : TextView
+    lateinit var mNote : TextView
 
     override  fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +64,7 @@ class InteractActivity  : AppCompatActivity(), InteractView {
         mRiskPercentText = findViewById(R.id.malignant_percent)
         mRiskValueText = findViewById(R.id.risk_text)
         mTakePhotoButton = findViewById(R.id.take_photo_button)
-
+        mNote = findViewById(R.id.note_text)
 
 
         val prevIntent = intent
@@ -82,6 +83,19 @@ class InteractActivity  : AppCompatActivity(), InteractView {
             }else{
                 mTrackingButton.text = "Begin Tracking"
             }
+
+            val database = FirebaseDatabase.getInstance().reference
+            database.child(mId.toString()).addValueEventListener(object: ValueEventListener{
+                override fun onCancelled(p0: DatabaseError?) {
+                    Log.e("idk", p0.toString())
+                }
+
+                override fun onDataChange(p0: DataSnapshot?) {
+                    val data = p0?.value.toString()
+                    val str = data.substring(data.indexOf("=")+1, data.indexOf("}"))
+                    mNote.text = str
+                }
+            })
 
             Log.e("InteractActivity", "Happening")
             mIdText.text = id.toString()
@@ -200,14 +214,15 @@ class InteractActivity  : AppCompatActivity(), InteractView {
     override fun onSuccessfulSave() {
         Toast.makeText(this, "Successfully Saved Moles", Toast.LENGTH_LONG).show()
         val database = FirebaseDatabase.getInstance().reference
-        database.child(mId.toString()).addValueEventListener(object: ValueEventListener(){
+        database.child(mId.toString()).addValueEventListener(object: ValueEventListener{
             override fun onCancelled(p0: DatabaseError?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onDataChange(p0: DataSnapshot?) {
-                val data = p0?.getValue(String.javaClass)
-
+                val data = p0?.value.toString()
+                val str = data.substring(data.indexOf("=")+1, data.indexOf("}"))
+                mNote.text = str
             }
         })
 
