@@ -5,8 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
-import android.widget.Button
-import android.widget.Toast
 import dreadloaf.com.htn2018.R
 import android.provider.MediaStore
 import android.graphics.Bitmap
@@ -15,8 +13,6 @@ import android.support.v4.content.FileProvider
 import android.R.attr.data
 import android.support.v4.app.NotificationCompat.getExtras
 import android.util.Log
-import android.widget.ImageView
-import android.widget.TextView
 import dreadloaf.com.htn2018.DateUtils
 import dreadloaf.com.htn2018.Mole
 import android.content.Context.MODE_PRIVATE
@@ -27,6 +23,7 @@ import android.R.id.edit
 import android.graphics.BitmapFactory
 import android.opengl.Visibility
 import android.view.View
+import android.widget.*
 import kotlin.math.roundToInt
 
 
@@ -36,6 +33,7 @@ class InteractActivity  : AppCompatActivity(), InteractView {
     val REQUEST_IMAGE_CAPTURE = 1
     lateinit var photoURI : Uri
 
+    lateinit var mProgressBar : ProgressBar
     lateinit var mTakePhotoButton :Button
     lateinit var mImagePath :String
     lateinit var mRiskPercentText : TextView
@@ -48,6 +46,7 @@ class InteractActivity  : AppCompatActivity(), InteractView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_interact)
 
+        mProgressBar = findViewById(R.id.analysis_loading)
         mImageView = findViewById(R.id.mole_image)
         mDateText = findViewById(R.id.date_logged_interact_view)
         mIdText = findViewById(R.id.mole_id_interact_view)
@@ -85,6 +84,9 @@ class InteractActivity  : AppCompatActivity(), InteractView {
             val bitmap = BitmapFactory.decodeFile(imageDir.toString())
             mImageView.setImageBitmap(bitmap)
             mTakePhotoButton.visibility = View.GONE
+        }else{
+            mRiskPercentText.visibility = View.GONE
+            mRiskValueText.text = "Pending..."
         }
 
 
@@ -106,6 +108,7 @@ class InteractActivity  : AppCompatActivity(), InteractView {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
                 Log.e("InteractActivity", "started activity")
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+                mProgressBar.visibility = View.VISIBLE
             }
 
 
@@ -139,14 +142,23 @@ class InteractActivity  : AppCompatActivity(), InteractView {
 
     override fun onSuccessfulAnalysis(probability: Double, type: String) {
         var risk = ""
+        var formattedPercent = (probability*100).roundToInt()
         if(type == "Malignant"){
             risk = "High"
         }else{
             risk = "Low"
+            formattedPercent = 100 - formattedPercent
         }
+
+        mRiskValueText.text = risk + " Risk: "
+        mRiskPercentText.text = formattedPercent.toString() + "%"
+        mRiskPercentText.visibility = View.VISIBLE
+        mTakePhotoButton.visibility = View.GONE
+        mProgressBar.visibility = View.GONE
         val mole = Mole(getNextId().toLong(), mDateText.text.toString(), probability, risk, mImagePath)
         Log.e("InteractActivity", "saving moles")
         mPresenter.saveMoles(mole)
+
     }
 
     override fun onSuccessfulSave() {

@@ -6,27 +6,36 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.widget.Button
+import android.view.Menu
 import dreadloaf.com.htn2018.FirebaseUtils
 import dreadloaf.com.htn2018.Mole
 import dreadloaf.com.htn2018.R
 import dreadloaf.com.htn2018.interact.InteractActivity
+import kotlinx.android.synthetic.main.activity_select.*
+import android.view.MenuInflater
+import android.view.MenuItem
+
 
 class SelectActivity : AppCompatActivity(), SelectView, FirebaseUtils.OnMoleLoadedListener, MyAdapter.CardViewOnClickListener{
 
-
     lateinit var mRecyclerView : RecyclerView
     lateinit var mPresenter : SelectPresenter
-
     lateinit var mMoles : List<Mole>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select)
 
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        if(getSupportActionBar() !=null) getSupportActionBar()?.setDisplayShowTitleEnabled(false);
         mPresenter = SelectPresenter(this, SelectInteractor())
 
+        //mToolBar = findViewById(R.id.toolbar)
+        //setSupportActionBar(mToolBar)
         mRecyclerView = findViewById(R.id.mole_list)
         val linearLayoutManager = LinearLayoutManager(this)
         mRecyclerView.layoutManager = linearLayoutManager
@@ -38,6 +47,23 @@ class SelectActivity : AppCompatActivity(), SelectView, FirebaseUtils.OnMoleLoad
             startActivity(intent)
         })
 
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+
+        if(item?.itemId == R.id.add_mole_button_toolbar){
+            val intent = Intent(this, InteractActivity::class.java)
+            startActivity(intent)
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onStart() {
