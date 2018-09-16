@@ -1,0 +1,28 @@
+{
+  "name": "skinapp",
+  "version": "1.0.0",
+  "description": "Decreasing the time from first signs to diagnosis ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndrewPochapsky/HTN2018.git"
+  },
+  "author": "Kartik Singhal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndrewPochapsky/HTN2018/issues"
+  },
+  "homepage": "https://github.com/AndrewPochapsky/HTN2018#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "firebase": "^5.5.0",
+    "firebase-admin": "^6.0.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.2.14"
+  }
+}

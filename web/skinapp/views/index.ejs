@@ -1,0 +1,54 @@
+<% include ./partials/header %>
+
+<div class="ui main text container">
+    <div style="text-align:center" id="headliner" class="ui huge header">Elysium</div>
+    <div class="ui top attached segment">
+        <div class="ui divided items">
+            <% moles.reverse().forEach(function(mole){ %>
+        <div>
+             
+
+            <div class="item">
+               <a  style="margin-bottom:3em;" class = "header" href="/showpage/<%= mole._id %>"><h2>Lesion #<%=mole.basicId%></h2></a>
+               <div class="meta">
+                    <span><%= mole.date %></span>
+                </div>
+
+               <img id = "indeximage" class="ui centered rounded image" src="photos/<%=mole["path"]%>">
+               
+
+            </div>
+            <div class="content">
+                
+                <div id="description" class="description">
+                    <h3 id="h3" class="items">Classified as: <%= mole.malignancyRisk %> Risk</h3>
+                   <h3 class = "items">
+                    <% if(mole.malignancyRisk == "High"){ %>
+                        <b>Predicted to be: </b><%= (Math.round(mole.malignancy * 100) / 100).toFixed()*100 %>% Malignant 
+                    <% } else{%>
+                        <b>Predicted to be: </b><%= 100 - (Math.round(mole.malignancy * 100) / 100).toFixed()*100 %>% Malignant
+                    <% } %>
+                
+                </h3>
+                    
+                </div>
+                <div class = "extra">
+                    <a id="button" class = "ui floated basic red button" href="/showpage/<%= mole._id %>">More <i class="right chevron icon"></i></a>
+                </div>
+            </div>
+            
+            
+            
+        </div>
+        <div class="ui divider"></div>
+
+    
+        <% }) %>
+
+        </div>
+    </div>
+</div>
+
+
+
+<% include ./partials/footer %>
