@@ -20,7 +20,7 @@ Communicate findings directly to healthcare professionals for input and easy app
   </ul>
 
 <h4>Built Using: </h4>
-  <ul style="list-style-type: none; display: inline-block;">
+  <ul>
     <li>
       Kotlin
     </li>
@@ -34,7 +34,7 @@ Firebase
 <a href="https://azure.microsoft.com/en-ca/services/cognitive-services/custom-vision-service/">Azure Custom Vision API </a>   
   </li>
   </ul>
- <ul style="list-style-type: none; display: inline-block; float:left;">
+ <ul >
   <li>
     Node.js
     </li>
