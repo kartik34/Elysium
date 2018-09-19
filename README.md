@@ -33,8 +33,7 @@ Firebase
    <li>
 <a href="https://azure.microsoft.com/en-ca/services/cognitive-services/custom-vision-service/">Azure Custom Vision API </a>   
   </li>
-  </ul>
- <ul >
+
   <li>
     Node.js
     </li>
