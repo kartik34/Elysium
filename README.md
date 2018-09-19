@@ -1,4 +1,4 @@
-# <img src="https://i.imgur.com/6OCvqbG.png" height="100dp">
+# <img src="https://i.imgur.com/odLTPzD.png" height="200dp">
 <h3>Inspired by the med-bays in the movie Elysium, where patients could be diagnosed and treated in an instant.
 </h3>
 
