@@ -5,7 +5,7 @@
 <h5>
 
 Elysium allows users to quickly and quite accurately analyze the potential risk of lesions present on the skin, and communicate these findings directly to their healthcare professionals for input and easy appointment making.
-d your portfolio and stay updated on the latest price and news updates as soon as they happen.
+
 </h5>
 <h4>
 Features: 
