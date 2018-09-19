@@ -20,7 +20,6 @@ Communicate findings directly to healthcare professionals for input and easy app
   </ul>
 
 <h4>Built Using: </h4>
- <span>
   <ul style="list-style-type: none; display: inline-block;">
     <li>
       Kotlin
@@ -51,4 +50,3 @@ Semantic-UI
   
   
   </ul>
-</span>
